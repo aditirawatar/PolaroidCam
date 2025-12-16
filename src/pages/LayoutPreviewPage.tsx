@@ -1,23 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
 import html2canvas from "html2canvas";
-import LayoutControls from "./components/LayoutPreview/LayoutControls";
-
-/**
- * html2canvas DOES NOT support modern color functions (oklch).
- * So we map UI colors to safe HEX colors here.
- */
-const SAFE_COLORS: Record<string, string> = {
-  pink: "#f9a8d4",
-  rose: "#fda4af",
-  blue: "#93c5fd",
-  green: "#86efac",
-  purple: "#d8b4fe",
-  yellow: "#fde047",
-  glacier: "#B8E6E1",
-  platinum: "#E5E5E5",
-  "slate-blue": "#6A5ACD",
-};
+import LayoutControls from "../components/LayoutPreview/LayoutControls";
 
 const LayoutPreviewPage = () => {
   const location = useLocation();
@@ -34,12 +18,10 @@ const LayoutPreviewPage = () => {
   const handleDownload = async () => {
     if (!previewRef.current) return;
 
-    const safeBgColor = SAFE_COLORS[frameColor] || "#f8fafc";
-
     const canvas = await html2canvas(previewRef.current, {
       scale: 2,
       useCORS: true,
-      backgroundColor: safeBgColor,
+      backgroundColor: frameColor,
     });
 
     const link = document.createElement("a");
@@ -74,12 +56,12 @@ const LayoutPreviewPage = () => {
         />
       </div>
 
-      {/* ===== CAPTURE AREA ===== */}
+      {/* ===== PREVIEW AREA (CAPTURED) ===== */}
       <div
         ref={previewRef}
         className="rounded-xl shadow-2xl flex flex-col items-center justify-center mb-8"
         style={{
-          backgroundColor: SAFE_COLORS[frameColor] || frameColor,
+          backgroundColor: frameColor,
           padding: "15px 15px 40px 15px",
         }}
       >
@@ -127,7 +109,7 @@ const LayoutPreviewPage = () => {
         />
       </div>
 
-      {/* Action Buttons */}
+      {/* Buttons */}
       <div className="flex gap-6">
         <button
           onClick={handleDownload}

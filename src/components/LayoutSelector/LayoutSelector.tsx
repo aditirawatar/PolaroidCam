@@ -1,97 +1,99 @@
-import type { LayoutType } from '../../types'
+import type { LayoutType } from "../../types";
 
 interface Props {
-  onLayoutSelect: (layout: LayoutType) => void
+  onLayoutSelect: (layout: LayoutType) => void;
 }
 
 const LayoutSelector = ({ onLayoutSelect }: Props) => {
   const layouts: { count: LayoutType; label: string; description: string }[] = [
-    { count: 3, label: 'Classic Trio', description: 'Perfect for close friends' },
-    { count: 5, label: 'Fab Five', description: 'Group memories' },
-    { count: 7, label: 'Lucky Seven', description: 'Big moments' },
-    { count: 9, label: 'The Full Story', description: 'Complete experience' }
-  ]
+    { count: 2, label: "Dynamic Duo", description: "Perfect for pairs" },
+    { count: 3, label: "Classic Trio", description: "Perfect for close friends" },
+    { count: 4, label: "Fantastic Four", description: "Squad vibes" },
+    { count: 5, label: "Fab Five", description: "Group memories" },
+  ];
+
+  const renderPolaroidPreview = (count: LayoutType) => {
+    return (
+      <div className="absolute inset-0 rounded-2xl border-2 bg-gradient-to-br from-purple-600 to-rose-500 p-3 sm:p-4 z-10">
+        <div
+          className={`grid ${count <= 3 ? "grid-cols-2" : "grid-cols-3"} gap-2 h-full place-items-center`}
+        >
+          {Array.from({ length: count }).map((_, i) => (
+            <div
+              key={i}
+              className="w-10 h-14 sm:w-12 sm:h-16 bg-pink-300 shadow-sm"
+              style={{
+                transform: `rotate(${i % 2 === 0 ? 6 : -6}deg)`,
+                marginTop: i % 3 === 0 ? "6px" : "0",
+                marginBottom: i % 3 === 1 ? "6px" : "0",
+              }}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-rose-300 via-pink-200 to-purple-300 px-3 sm:px-6 py-4 sm:py-4 md:py-4 lg:py-4">
       {/* Header */}
-      <div className="text-center mb-12">
-        <h1 className="text-5xl font-bold text-slate-blue mb-4">
-          📸 Polaroid Booth
+      <header className="text-center mb-4 sm:mb-4 mt-2 sm:mt-1">
+        <h1
+          className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight
+                     bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500
+                     bg-clip-text text-transparent drop-shadow-md animate-gradient"
+        >
+          Polaroid Booth
         </h1>
-        <p className="text-xl text-gray-700 max-w-md">
-          Choose your layout and create vintage memories instantly
+        <p className="text-sm sm:text-lg md:text-xl text-gray-700 font-medium mt-3 sm:mt-4 mx-auto leading-relaxed px-2">
+          Choose your layout and capture{" "}
+          <span className="text-pink-500 font-bold">vintage memories</span> instantly ✨
         </p>
-      </div>
+      </header>
 
       {/* Layout Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl w-full">
-        {layouts.map(({ count, label, description }) => (
-          <div
-            key={count}
-            onClick={() => onLayoutSelect(count)}
-            className="bg-card-gradient backdrop-blur-sm rounded-2xl p-8 cursor-pointer 
-                     transform hover:scale-105 transition-all duration-300 
-                     border border-white/20 shadow-xl hover:shadow-2xl"
-          >
-            <div className="text-center">
-              <div className="text-4xl font-bold text-slate-blue mb-2">
-                {count}
-              </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                {label}
-              </h3>
-              <p className="text-gray-600 mb-4">
-                {description}
-              </p>
-              
-              {/* Visual Preview */}
-              <div className="flex justify-center">
-                <LayoutPreview count={count} />
+      <main className="flex-1 flex items-center justify-center mb-4 sm:mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 w-full max-w-4xl mx-auto px-2 sm:px-2">
+          {layouts.map(({ count, label, description }) => (
+            <div
+              key={count}
+              onClick={() => onLayoutSelect(count)}
+              className="relative group cursor-pointer transform transition-all duration-500 hover:scale-105"
+            >
+              <div className="relative w-full h-40 sm:h-46 md:h-60 rounded-2xl shadow-polaroid border border-pink-950 overflow-hidden">
+                {/* Glow effect */}
+                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition duration-500 bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 blur-lg z-0" />
+
+                {/* Preview */}
+                {renderPolaroidPreview(count)}
+
+                {/* Overlay text */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center rounded-2xl bg-white/70 backdrop-blur-md px-3 z-20">
+                  <div className="text-3xl sm:text-4xl font-extrabold text-pink-700 drop-shadow-sm mb-2">
+                    {count}
+                  </div>
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-800">
+                    {label}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-500 mt-2 px-2">
+                    {description}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </main>
 
       {/* Footer */}
-      <div className="mt-12 text-center text-gray-600">
-        <p>✨ No signup required • Instant download • Complete privacy</p>
-      </div>
+      <footer className="mb-2 sm:mb-2 text-center text-pink-700 px-2">
+        <div className="border-t border-dashed border-pink-900 mb-2 sm:mb-2 mx-auto" />
+        <p className="text-xs sm:text-sm md:text-base">
+          ✨ No signup required • 📥 Instant download • 🔒 Complete privacy
+        </p>
+      </footer>
     </div>
-  )
-}
+  );
+};
 
-// Layout Preview Component
-const LayoutPreview = ({ count }: { count: LayoutType }) => {
-  const getGridClass = () => {
-    switch (count) {
-      case 3: return 'grid-cols-3'
-      case 5: return 'grid-cols-3' // 2+1+2 layout
-      case 7: return 'grid-cols-3' // 3+1+3 layout
-      case 9: return 'grid-cols-3'
-      default: return 'grid-cols-3'
-    }
-  }
-
-  const getBoxes = () => {
-    const boxes = []
-    for (let i = 0; i < count; i++) {
-      boxes.push(
-        <div
-          key={i}
-          className="w-6 h-6 bg-slate-blue/30 rounded border border-slate-blue/50"
-        />
-      )
-    }
-    return boxes
-  }
-
-  return (
-    <div className={`grid ${getGridClass()} gap-1 p-2`}>
-      {getBoxes()}
-    </div>
-  )
-}
-
-export default LayoutSelector
+export default LayoutSelector;
